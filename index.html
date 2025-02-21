@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thingy Submission</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+            color: #333;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        h1, h2 {
+            transition: color 0.5s;
+        }
+
+        input {
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 5px #007BFF;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #submittedThingies {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .thingy {
+            background-color: white;
+            padding: 10px;
+            margin: 5px auto;
+            width: 60%;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(-10px);
+            animation: fadeIn 0.3s forwards;
+            position: relative;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .dark-mode .thingy {
+            background-color: #222;
+            color: #fff;
+            box-shadow: 0px 2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode input {
+            background-color: #333;
+            color: white;
+            border-color: #00bcd4;
+        }
+
+        .dark-mode input:focus {
+            border-color: #00e5ff;
+            box-shadow: 0 0 5px #00e5ff;
+        }
+
+        .dark-mode button {
+            background-color: #00bcd4;
+        }
+
+        .dark-mode button:hover {
+            background-color: #008ba3;
+        }
+
+        /* Delete Button */
+        .deleteButton {
+            position: absolute;
+            top: 50%;
+            right: -80px;
+            transform: translateY(-50%);
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            display: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .deleteButton:hover {
+            background-color: #a71d2a;
+        }
+
+        /* Dark Mode Delete Button */
+        .dark-mode .deleteButton {
+            background-color: #ff4444;
+        }
+
+        .dark-mode .deleteButton:hover {
+            background-color: #cc0000;
+        }
+
+        /* Dark Mode Toggle Button */
+        #darkModeToggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #darkModeToggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* MP4 Video Styles */
+        #spongebobVideo {
+            display: none;
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        #spongebobVideo video {
+            width: 100%;
+            height: auto;
+        }
+
+        /* MP3 Audio Styles */
+        #spongebobAudio {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Dark Mode Toggle Button (Lightbulb Icon) -->
+<button id="darkModeToggle">💡</button>
+
+<h1>Welcome</h1>
+<h2>Enter a thingy</h2>
+
+<input id="theThingy" placeholder="Type something..."> <br><br>
+<button id="submittingTheThingy">Send the thingy</button>
+<br><br>
+<div id="submittedThingies"></div>
+<br><br>
+<button id="removeThingiesButton">Remove All Thingies</button>
+
+<!-- MP4 Video Embed -->
+<div id="spongebobVideo">
+    <video controls id="spongebobVideoPlayer">
+        <source id="spongebobVideoSource" src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+
+<script>
+document.getElementById("submittingTheThingy").onclick = function() {
+    let thingyText = document.getElementById("theThingy").value;
+    
+    if (thingyText.trim() !== "") { 
+        let newThingy = document.createElement("div"); 
+        newThingy.classList.add("thingy");
+        newThingy.textContent = thingyText;
+
+        // Create a delete button
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "❌";
+        deleteButton.classList.add("deleteButton");
+
+        // Remove thingy when delete button is clicked
+        deleteButton.onclick = function() {
+            newThingy.style.animation = "fadeOut 0.3s forwards";
+            setTimeout(() => newThingy.remove(), 300);
+        };
+
+        // Toggle delete button visibility on right-click
+        newThingy.oncontextmenu = function(event) {
+            event.preventDefault(); // Prevent default right-click menu
+            if (deleteButton.style.display === "inline-block") {
+                deleteButton.style.display = "none";
+            } else {
+                deleteButton.style.display = "inline-block";
+            }
+        };
+
+        newThingy.appendChild(deleteButton);
+        document.getElementById("submittedThingies").appendChild(newThingy); 
+    }
+
+    document.getElementById("theThingy").value = ""; 
+
+    // Check if the user typed "spongebob"
+    if (thingyText.toLowerCase() === "spongebob") {
+        let videoContainer = document.getElementById("spongebobVideo");
+        let videoSource = document.getElementById("spongebobVideoSource");
+
+        // Set the MP4 video file path
+        videoSource.src = "SpongeBob sings Billie Jean.mp4"; // Replace with your video file path
+        videoContainer.style.display = "block";  // Show the video
+        let videoPlayer = document.getElementById("spongebobVideoPlayer");
+        videoPlayer.load(); // Reload the video element to apply the new source
+
+        videoPlayer.play();
+    }
+};
+
+// Function to remove all submitted thingies
+document.getElementById("removeThingiesButton").onclick = function() {
+    document.getElementById("submittedThingies").innerHTML = ""; 
+    document.getElementById("spongebobVideo").style.display = "none"; // Hide video when all thingies are removed
+    document.getElementById("spongebobAudio").style.display = "none"; // Hide audio when all thingies are removed
+    document.getElementById("spongebobVideoPlayer").pause(); // Pause the video
+    document.getElementById("spongebobAudioPlayer").pause(); // Pause the audio
+    document.getElementById("spongebobVideoSource").src = ""; // Reset the video source
+    document.getElementById("spongebobAudioSource").src = ""; // Reset the audio source
+};
+
+// Dark Mode Toggle Function
+const darkModeButton = document.getElementById("darkModeToggle");
+const body = document.body;
+
+// Check if user has a saved preference
+if (localStorage.getItem("dark-mode") === "enabled") {
+    body.classList.add("dark-mode");
+    darkModeButton.textContent = "🌙"; // Set correct icon
+}
+
+darkModeButton.onclick = function() {
+    body.classList.toggle("dark-mode");
+
+    if (body.classList.contains("dark-mode")) {
+        localStorage.setItem("dark-mode", "enabled");
+        darkModeButton.textContent = "🌙"; // Change icon to moon
+    } else {
+        localStorage.setItem("dark-mode", "disabled");
+        darkModeButton.textContent = "💡"; // Change icon back to lightbulb
+    }
+};
+</script>
+
+</body>
+</html>
